@@ -1,14 +1,92 @@
 import 'package:flutter/material.dart';
 import '../../../core/models/movie_model.dart';
+import 'movie_details_widgets.dart';
 
 class MovieDetailsScreen extends StatelessWidget {
   final MovieModel movie;
 
   const MovieDetailsScreen({super.key, required this.movie});
 
+  List<Widget> _buildScreenshotsList() {
+    final String firstImageUrl =
+    (movie.screenshot1 != null && movie.screenshot1!.isNotEmpty)
+        ? movie.screenshot1!
+        : (movie.largeCoverImage.isNotEmpty
+        ? movie.largeCoverImage
+        : movie.mediumCoverImage);
+
+    return [
+      Padding(
+        padding: const EdgeInsets.only(bottom: 10.0),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: Image.network(
+            firstImageUrl,
+            width: double.infinity,
+            height: 160,
+            fit: BoxFit.cover,
+            errorBuilder: (c, e, s) => Image.asset(
+              'assets/images/photo1.jpg',
+              width: double.infinity,
+              height: 160,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(bottom: 10.0),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: Image.asset(
+            'assets/images/photo1.jpg',
+            width: double.infinity,
+            height: 160,
+            fit: BoxFit.cover,
+          ),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(bottom: 10.0),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: Image.asset(
+            'assets/images/photo2.jpg',
+            width: double.infinity,
+            height: 160,
+            fit: BoxFit.cover,
+          ),
+        ),
+      ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
+
+    final List<Map<String, String>> castList = [
+      {
+        'name': 'Hayley Atwell',
+        'character': 'Captain Carter',
+        'asset': 'assets/images/hayley.jpg',
+      },
+      {
+        'name': 'Elizabeth Olsen',
+        'character': 'Wanda Maximoff / The Scarlet Witch',
+        'asset': 'assets/images/elizabeth.jpg',
+      },
+      {
+        'name': 'Rachel McAdams',
+        'character': 'Dr. Christine Palmer',
+        'asset': 'assets/images/rachel.jpg',
+      },
+      {
+        'name': 'Charlize Theron',
+        'character': 'Clea',
+        'asset': 'assets/images/charlize.jpg',
+      },
+    ];
 
     return Scaffold(
       backgroundColor: const Color(0xFF121312),
@@ -16,85 +94,9 @@ class MovieDetailsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Stack(
-              children: [
-                Image.network(
-                  movie.largeCoverImage.isNotEmpty
-                      ? movie.largeCoverImage
-                      : movie.mediumCoverImage,
-                  width: double.infinity,
-                  height: screenHeight * 0.52,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Container(
-                    height: screenHeight * 0.52,
-                    color: Colors.grey[900],
-                    child: const Icon(Icons.movie, size: 80, color: Colors.amber),
-                  ),
-                ),
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.black.withAlpha(140),
-                          Colors.transparent,
-                          const Color(0xFF121312),
-                        ],
-                        stops: const [0.0, 0.4, 1.0],
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 48,
-                  left: 16,
-                  child: IconButton(
-                    icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 24),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ),
-                Positioned(
-                  top: 48,
-                  right: 16,
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withAlpha(45),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Icon(Icons.bookmark, color: Colors.white, size: 22),
-                  ),
-                ),
-                Positioned.fill(
-                  child: Center(
-                    child: Container(
-                      width: 82,
-                      height: 82,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Container(
-                          width: 68,
-                          height: 68,
-                          decoration: const BoxDecoration(
-                            color: Colors.amber,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.play_arrow_rounded,
-                            color: Colors.white,
-                            size: 48,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+            MovieDetailsHeader(
+              movie: movie,
+              screenHeight: screenHeight,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -107,7 +109,7 @@ class MovieDetailsScreen extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 26,
+                        fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -116,13 +118,16 @@ class MovieDetailsScreen extends StatelessWidget {
                   Center(
                     child: Text(
                       movie.year.toString(),
-                      style: TextStyle(color: Colors.grey[400], fontSize: 15),
+                      style: TextStyle(
+                        color: Colors.grey[400],
+                        fontSize: 15,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 18),
                   SizedBox(
                     width: double.infinity,
-                    height: 54,
+                    height: 52,
                     child: ElevatedButton(
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
@@ -136,64 +141,81 @@ class MovieDetailsScreen extends StatelessWidget {
                         'Watch',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 20,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ),
                   const SizedBox(height: 18),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildStatChip(
-                          icon: Icons.favorite,
-                          iconColor: const Color(0xFFFFC107),
-                          text: '${movie.likeCount > 0 ? movie.likeCount : 15}',
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _buildStatChip(
-                          icon: Icons.access_time_filled,
-                          iconColor: const Color(0xFFFFC107),
-                          text: '${movie.runtime > 0 ? movie.runtime : 90}',
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _buildStatChip(
-                          icon: Icons.star,
-                          iconColor: const Color(0xFFFFC107),
-                          text: '${movie.rating}',
-                        ),
-                      ),
-                    ],
+                  MovieStatsRow(movie: movie),
+                  const SizedBox(height: 24),
+                  const SectionTitle(title: 'Screen Shots'),
+                  const SizedBox(height: 12),
+                  ..._buildScreenshotsList(),
+                  const SizedBox(height: 14),
+                  const SectionTitle(title: 'Similar'),
+                  const SizedBox(height: 6),
+                  SimilarMoviesSection(movie: movie),
+                  const SizedBox(height: 24),
+                  const SectionTitle(title: 'Summary'),
+                  const SizedBox(height: 10),
+                  Text(
+                    movie.summary.isNotEmpty
+                        ? movie.summary
+                        : 'Following the events of the movie, the main characters confront various challenges while navigating through incredible adventures.',
+                    style: TextStyle(
+                      color: Colors.grey[300],
+                      fontSize: 20,
+                      height: 1.5,
+                    ),
                   ),
                   const SizedBox(height: 24),
-                  const Text(
-                    'Screen Shots',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                  const SectionTitle(title: 'Cast'),
+                  const SizedBox(height: 12),
+                  ...castList.map(
+                        (actor) => Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: CastTile(
+                        actorName: actor['name']!,
+                        characterName: actor['character']!,
+                        assetPath: actor['asset']!,
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 14),
-                  SizedBox(
-                    height: 165,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        if (movie.screenshot1 != null) _buildScreenshotItem(movie.screenshot1!),
-                        if (movie.screenshot2 != null) _buildScreenshotItem(movie.screenshot2!),
-                        if (movie.screenshot3 != null) _buildScreenshotItem(movie.screenshot3!),
-                        if (movie.screenshot1 == null)
-                          _buildScreenshotItem(movie.mediumCoverImage),
-                      ],
-                    ),
+                  const SizedBox(height: 24),
+                  const SectionTitle(title: 'Genres'),
+                  const SizedBox(height: 12),
+                  Wrap(
+                    spacing: 10,
+                    runSpacing: 10,
+                    children:
+                    (movie.genres.isNotEmpty
+                        ? movie.genres
+                        : ['Action', 'Drama'])
+                        .map(
+                          (genre) => Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF282A28),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          genre,
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    )
+                        .toList(),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 35),
                 ],
               ),
             ),
@@ -202,47 +224,7 @@ class MovieDetailsScreen extends StatelessWidget {
       ),
     );
   }
-
-  Widget _buildStatChip({required IconData icon, required Color iconColor, required String text}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 14),
-      decoration: BoxDecoration(
-        color: const Color(0xFF282A28),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: iconColor, size: 24),
-          const SizedBox(width: 8),
-          Text(
-            text,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildScreenshotItem(String url) {
-    return Container(
-      width: 310,
-      margin: const EdgeInsets.only(right: 14),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(18),
-        child: Image.network(
-          url,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) => Container(
-            color: Colors.grey[800],
-            child: const Icon(Icons.broken_image, color: Colors.grey),
-          ),
-        ),
-      ),
-    );
-  }
 }
+
+
+
