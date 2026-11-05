@@ -50,4 +50,9 @@ class ApiManager {
       return [];
     }
   }
+
+  // --- دالة البحث المباشرة لتسهيل الاستخدام في SearchProvider ---
+  static Future<List<MovieModel>> searchMovies(String query) async {
+    return getMovies(queryTerm: query);
+  }
 }
