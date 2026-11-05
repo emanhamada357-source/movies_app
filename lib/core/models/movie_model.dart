@@ -3,16 +3,32 @@ class MovieModel {
   final String title;
   final int year;
   final double rating;
+  final int runtime;
+  final int likeCount;
+  final String summary;
   final String mediumCoverImage;
+  final String largeCoverImage;
   final List<String> genres;
+  final String? backgroundImage;
+  final String? screenshot1;
+  final String? screenshot2;
+  final String? screenshot3;
 
   MovieModel({
     required this.id,
     required this.title,
     required this.year,
     required this.rating,
+    required this.runtime,
+    required this.likeCount,
+    required this.summary,
     required this.mediumCoverImage,
+    required this.largeCoverImage,
     required this.genres,
+    this.backgroundImage,
+    this.screenshot1,
+    this.screenshot2,
+    this.screenshot3,
   });
 
   factory MovieModel.fromJson(Map<String, dynamic> json) {
@@ -21,8 +37,16 @@ class MovieModel {
       title: json['title'] ?? '',
       year: json['year'] ?? 0,
       rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
+      runtime: json['runtime'] ?? 0,
+      likeCount: json['like_count'] ?? 0,
+      summary: json['summary'] ?? '',
       mediumCoverImage: json['medium_cover_image'] ?? '',
-      genres: json['genres'] != null ? List<String>.from(json['genres']) : [],
+      largeCoverImage: json['large_cover_image'] ?? json['medium_cover_image'] ?? '',
+      genres: List<String>.from(json['genres'] ?? []),
+      backgroundImage: json['background_image_original'],
+      screenshot1: json['large_screenshot_image1'],
+      screenshot2: json['large_screenshot_image2'],
+      screenshot3: json['large_screenshot_image3'],
     );
   }
 }

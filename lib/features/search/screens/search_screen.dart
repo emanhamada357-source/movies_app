@@ -19,7 +19,6 @@ class SearchScreen extends StatelessWidget {
               builder: (context, provider, child) {
                 return Column(
                   children: [
-                    // --- Search Bar ---
                     TextField(
                       onChanged: (val) => provider.search(val),
                       style: const TextStyle(color: Colors.white),
@@ -36,8 +35,6 @@ class SearchScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
-
-                    // --- Search Results / Empty State ---
                     Expanded(
                       child: provider.isLoading
                           ? const Center(child: CircularProgressIndicator(color: Colors.amber))

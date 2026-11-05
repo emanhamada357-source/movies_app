@@ -31,18 +31,14 @@ class _HomeScreenState extends State<HomeScreen> {
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  // --- SECTION 1: AVAILABLE NOW WITH FIGMA BACKGROUND & GRADIENT ---
                   Stack(
                     children: [
-                      // 1. Background Image (1917)
                       Positioned.fill(
                         child: Image.asset(
                           'assets/images/background.jpg',
                           fit: BoxFit.cover,
                         ),
                       ),
-
-                      // 2. Linear Gradient (#121312 with 80% & 60% opacity)
                       Positioned.fill(
                         child: Container(
                           decoration: BoxDecoration(
@@ -59,21 +55,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
-
-                      // 3. Main Content Layer
                       Column(
                         children: [
                           const SizedBox(height: 45),
-
-                          // Available Now Header (Bigger Size: height 90)
                           Image.asset(
                             'assets/images/available_now.png',
                             height: 90,
                             fit: BoxFit.contain,
                           ),
                           const SizedBox(height: 10),
-
-                          // PageView Carousel
                           SizedBox(
                             height: 350,
                             child: PageView.builder(
@@ -97,10 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                             ),
                           ),
-
                           const SizedBox(height: 10),
-
-                          // Watch Now Header (Bigger Size: height 95)
                           Image.asset(
                             'assets/images/watch_now.png',
                             height: 95,
@@ -111,8 +98,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-
-                  // --- SECTION 2: ACTION CATEGORY ---
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Row(
@@ -139,7 +124,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
-
                   SizedBox(
                     height: 180,
                     child: ListView.builder(

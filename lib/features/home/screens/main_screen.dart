@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import '../../search/screens/search_screen.dart';
+import '../../browse/screens/browse_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -15,7 +16,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _screens = const [
     HomeScreen(),
     SearchScreen(),
-    Center(child: Text('Explore Screen', style: TextStyle(color: Colors.white))),
+    BrowseScreen(),
     Center(child: Text('Profile Screen', style: TextStyle(color: Colors.white))),
   ];
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/models/movie_model.dart';
+import '../../details/screens/movie_details_screen.dart';
 
 class MovieCard extends StatelessWidget {
   final MovieModel movie;
@@ -18,7 +19,15 @@ class MovieCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: onTap ??
+              () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MovieDetailsScreen(movie: movie),
+              ),
+            );
+          },
       child: Container(
         width: width,
         height: height,
@@ -43,9 +52,9 @@ class MovieCard extends StatelessWidget {
                 top: 8,
                 left: 8,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4), // زيادة البادينج قليلاً
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.65),
+                    color: Colors.black.withAlpha(166),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(
@@ -55,7 +64,7 @@ class MovieCard extends StatelessWidget {
                         movie.rating.toString(),
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 13, // تكبير حجم الخط من 12 إلى 13
+                          fontSize: 13,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -63,7 +72,7 @@ class MovieCard extends StatelessWidget {
                       const Icon(
                         Icons.star,
                         color: Colors.amber,
-                        size: 15, // تكبير النجمة من 13 إلى 15
+                        size: 15,
                       ),
                     ],
                   ),
