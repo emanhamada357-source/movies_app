@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'features/movie_details/screens/movie_details_screen.dart';
 import 'features/movie_details/providers/movie_details_provider.dart';
+import 'features/library/providers/library_provider.dart';
 
 void main() {
   runApp(
@@ -10,6 +11,9 @@ void main() {
       providers: [
         ChangeNotifierProvider(
           create: (context) => MovieDetailsProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => LibraryProvider(),
         ),
       ],
       child: const MoviesApp(),

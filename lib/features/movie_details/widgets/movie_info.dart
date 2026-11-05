@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../library/providers/library_provider.dart';
 
 class MovieInfo extends StatelessWidget {
   const MovieInfo({super.key});
@@ -41,7 +44,23 @@ class MovieInfo extends StatelessWidget {
             width: double.infinity,
             height: 44,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                final libraryProvider =
+                context.read<LibraryProvider>();
+
+                libraryProvider.addToHistory({
+                  'id': 1,
+                  'image':
+                  'https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg',
+                  'rating': '7.6',
+                });
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Added to History'),
+                  ),
+                );
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xffE94545),
                 foregroundColor: Colors.white,

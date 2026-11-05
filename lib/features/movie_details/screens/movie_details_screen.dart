@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../library/screens/watchlist_screen.dart';
 import '../widgets/movie_poster.dart';
 import '../widgets/movie_info.dart';
 import '../widgets/movie_stats.dart';
@@ -53,6 +54,21 @@ class MovieDetailsScreen extends StatelessWidget {
               SizedBox(height: 20),
             ],
           ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color(0xffE94545),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const WatchlistScreen(),
+            ),
+          );
+        },
+        child: const Icon(
+          Icons.bookmark,
+          color: Colors.white,
         ),
       ),
     );
