@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'features/movie_details/screens/movie_details_screen.dart';
+import 'features/home/screens/main_screen.dart';
 import 'features/movie_details/providers/movie_details_provider.dart';
 import 'features/library/providers/library_provider.dart';
 
@@ -34,7 +34,7 @@ class MoviesApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xff121312),
         fontFamily: 'Roboto',
       ),
-      home: const MovieDetailsScreen(),
+      home: const MainScreen(),
     );
   }
 }
