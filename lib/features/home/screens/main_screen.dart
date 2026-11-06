@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'home_screen.dart';
 import '../../search/screens/search_screen.dart';
 import '../../browse/screens/browse_screen.dart';
-import '../../library/screens/watchlist_screen.dart';
-import '../../library/screens/history_screen.dart';
+import '../../library/providers/library_provider.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -20,15 +20,19 @@ class _MainScreenState extends State<MainScreen> {
     HomeScreen(),
     SearchScreen(),
     BrowseScreen(),
-    WatchlistScreen(),
-    HistoryScreen(),
     Center(
-      child: Text(
-        'Profile Screen',
-        style: TextStyle(color: Colors.white),
-      ),
+      child: Text('Profile Screen', style: TextStyle(color: Colors.white)),
     ),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<LibraryProvider>().loadLibrary();
+    });
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -42,10 +46,7 @@ class _MainScreenState extends State<MainScreen> {
       backgroundColor: const Color(0xFF121312),
       body: _screens[_selectedIndex],
       bottomNavigationBar: Container(
-        margin: const EdgeInsets.symmetric(
-          horizontal: 10,
-          vertical: 12,
-        ),
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
           color: const Color(0xFF282A28),
           borderRadius: BorderRadius.circular(24),
@@ -61,25 +62,11 @@ class _MainScreenState extends State<MainScreen> {
           showSelectedLabels: false,
           showUnselectedLabels: false,
           items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.search),
-              label: 'Search',
-            ),
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+            BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
             BottomNavigationBarItem(
               icon: Icon(Icons.explore),
               label: 'Explore',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.bookmark),
-              label: 'Watchlist',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.history),
-              label: 'History',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.account_circle),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/api/api_manager.dart';
 import '../../../core/models/movie_model.dart';
+import '../../library/providers/library_provider.dart';
 import 'movie_details_widgets.dart';
 
 class MovieDetailsScreen extends StatefulWidget {
@@ -92,11 +94,25 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                   ),
                 ),
                 const SizedBox(height: 18),
+
                 SizedBox(
                   width: double.infinity,
                   height: 52,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      await context.read<LibraryProvider>().addToHistory(
+                        movie.toMap(),
+                      );
+
+                      if (!context.mounted) return;
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Added to History'),
+                          duration: Duration(seconds: 1),
+                        ),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFE50914),
                       shape: RoundedRectangleBorder(
@@ -114,6 +130,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 18),
                 MovieStatsRow(movie: movie),
                 const SizedBox(height: 24),
@@ -211,7 +228,6 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
               child: CircularProgressIndicator(color: Colors.amber),
             );
           }
-
           if (snapshot.hasError || !snapshot.hasData) {
             return Center(
               child: Column(
@@ -236,6 +252,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
               ),
             );
           }
+
           return _buildDetails(snapshot.data!);
         },
       ),
