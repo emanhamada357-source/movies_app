@@ -5,6 +5,7 @@ import 'home_screen.dart';
 import '../../search/screens/search_screen.dart';
 import '../../browse/screens/browse_screen.dart';
 import '../../library/providers/library_provider.dart';
+import '../../profile/screens/profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -20,9 +21,7 @@ class _MainScreenState extends State<MainScreen> {
     HomeScreen(),
     SearchScreen(),
     BrowseScreen(),
-    Center(
-      child: Text('Profile Screen', style: TextStyle(color: Colors.white)),
-    ),
+    ProfileScreen(),
   ];
 
   @override
@@ -46,7 +45,10 @@ class _MainScreenState extends State<MainScreen> {
       backgroundColor: const Color(0xFF121312),
       body: _screens[_selectedIndex],
       bottomNavigationBar: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        margin: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
+        ),
         decoration: BoxDecoration(
           color: const Color(0xFF282A28),
           borderRadius: BorderRadius.circular(24),
@@ -62,8 +64,14 @@ class _MainScreenState extends State<MainScreen> {
           showSelectedLabels: false,
           showUnselectedLabels: false,
           items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.search),
+              label: 'Search',
+            ),
             BottomNavigationBarItem(
               icon: Icon(Icons.explore),
               label: 'Explore',
