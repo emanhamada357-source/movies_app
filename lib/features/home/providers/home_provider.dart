@@ -5,7 +5,9 @@ import '../../../core/models/movie_model.dart';
 class HomeProvider extends ChangeNotifier {
   List<MovieModel> availableNowMovies = [];
   List<MovieModel> actionMovies = [];
+
   bool isLoading = true;
+  String? errorMessage;
 
   HomeProvider() {
     fetchHomeData();
@@ -13,17 +15,27 @@ class HomeProvider extends ChangeNotifier {
 
   Future<void> fetchHomeData() async {
     isLoading = true;
+    errorMessage = null;
     notifyListeners();
 
     try {
-      availableNowMovies = await ApiManager.getMovies(limit: 5, sortBy: 'year');
-      actionMovies = await ApiManager.getMovies(limit: 10, genre: 'Action');
-      debugPrint('Fetched Movies Count: ${availableNowMovies.length}');
-    } catch (e) {
-      debugPrint('HomeProvider Error: $e');
-    }
+      final results = await Future.wait([
+        ApiManager.getMovies(limit: 5, sortBy: 'year'),
+        ApiManager.getMovies(limit: 10, genre: 'Action'),
+      ]);
 
-    isLoading = false;
-    notifyListeners();
+      availableNowMovies = results[0];
+      actionMovies = results[1];
+
+      if (availableNowMovies.isEmpty && actionMovies.isEmpty) {
+        errorMessage = 'No movies available right now.';
+      }
+    } catch (e) {
+      errorMessage = 'Unable to load movies. Please try again.';
+      debugPrint('HomeProvider Error: $e');
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
   }
 }

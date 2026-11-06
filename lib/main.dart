@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-import 'features/home/screens/main_screen.dart';
+import 'firebase_options.dart';
+import 'features/onboarding/screens/splach screen.dart';
 import 'features/movie_details/providers/movie_details_provider.dart';
 import 'features/library/providers/library_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(
     MultiProvider(
       providers: [
@@ -33,8 +41,9 @@ class MoviesApp extends StatelessWidget {
         brightness: Brightness.dark,
         scaffoldBackgroundColor: const Color(0xff121312),
         fontFamily: 'Roboto',
+        useMaterial3: true,
       ),
-      home: const MainScreen(),
+      home: const SplashScreen(),
     );
   }
 }

@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../../core/models/movie_model.dart';
+import '../../details/screens/movie_details_screen.dart';
+import '../providers/library_provider.dart';
 
 class LibraryMovieCard extends StatelessWidget {
   final Map<String, dynamic> movie;
@@ -10,16 +15,31 @@ class LibraryMovieCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final movieModel = MovieModel.fromMap(movie);
+
+    final imageUrl = movieModel.mediumCoverImage.isNotEmpty
+        ? movieModel.mediumCoverImage
+        : movieModel.largeCoverImage;
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: Stack(
+        fit: StackFit.expand,
         children: [
           // Movie Poster
-          AspectRatio(
-            aspectRatio: 2 / 3,
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MovieDetailsScreen(
+                    movie: movieModel,
+                  ),
+                ),
+              );
+            },
             child: Image.network(
-              movie['image'] ?? '',
-              width: double.infinity,
+              imageUrl,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
                 return Container(
@@ -27,6 +47,7 @@ class LibraryMovieCard extends StatelessWidget {
                   child: const Icon(
                     Icons.movie,
                     color: Colors.white,
+                    size: 35,
                   ),
                 );
               },
@@ -50,7 +71,7 @@ class LibraryMovieCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    '${movie['rating'] ?? '0.0'}',
+                    movieModel.rating.toString(),
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 11,
@@ -63,6 +84,50 @@ class LibraryMovieCard extends StatelessWidget {
                     size: 13,
                   ),
                 ],
+              ),
+            ),
+          ),
+
+          // Remove Button
+          Positioned(
+            top: 2,
+            left: 2,
+            child: Consumer<LibraryProvider>(
+              builder: (context, provider, child) {
+                return IconButton(
+                  onPressed: () {
+                    provider.removeFromWatchlist(movieModel.id);
+                  },
+                  icon: const Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  ),
+                  style: IconButton.styleFrom(
+                    backgroundColor: Colors.black.withOpacity(0.65),
+                  ),
+                );
+              },
+            ),
+          ),
+
+          // Movie Title
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              padding: const EdgeInsets.all(6),
+              color: Colors.black.withOpacity(0.7),
+              child: Text(
+                movieModel.title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),

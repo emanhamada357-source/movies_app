@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../core/api/api_manager.dart';
 import '../../../core/models/movie_model.dart';
 import '../../home/widgets/movie_card.dart';
+import 'package:provider/provider.dart';
+import '../../library/providers/library_provider.dart';
 
 // 1. Header Cover & Actions
 class MovieDetailsHeader extends StatelessWidget {
@@ -58,13 +60,42 @@ class MovieDetailsHeader extends StatelessWidget {
         Positioned(
           top: 48,
           right: 16,
-          child: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.white.withAlpha(45),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: const Icon(Icons.bookmark, color: Colors.white, size: 22),
+          child: Consumer<LibraryProvider>(
+            builder: (context, libraryProvider, child) {
+              final isSaved = libraryProvider.isInWatchlist(movie.id);
+
+              return Container(
+                decoration: BoxDecoration(
+                  color: Colors.white.withAlpha(45),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: IconButton(
+                  onPressed: () {
+                    if (isSaved) {
+                      libraryProvider.removeFromWatchlist(movie.id);
+                    } else {
+                      libraryProvider.addToWatchlist(movie.toMap());
+                    }
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          isSaved
+                              ? 'Removed from Watchlist'
+                              : 'Added to Watchlist',
+                        ),
+                        duration: const Duration(seconds: 1),
+                      ),
+                    );
+                  },
+                  icon: Icon(
+                    isSaved ? Icons.bookmark : Icons.bookmark_border,
+                    color: isSaved ? Colors.amber : Colors.white,
+                    size: 24,
+                  ),
+                ),
+              );
+            },
           ),
         ),
         Positioned.fill(
@@ -235,13 +266,13 @@ class SimilarMoviesSection extends StatelessWidget {
 class CastTile extends StatelessWidget {
   final String actorName;
   final String characterName;
-  final String assetPath;
+  final String imageUrl;
 
   const CastTile({
     super.key,
     required this.actorName,
     required this.characterName,
-    required this.assetPath,
+    required this.imageUrl,
   });
 
   @override
@@ -256,18 +287,17 @@ class CastTile extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: Image.asset(
-              assetPath,
+            child: imageUrl.isNotEmpty
+                ? Image.network(
+              imageUrl,
               width: 54,
               height: 54,
               fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Container(
-                width: 54,
-                height: 54,
-                color: Colors.grey[800],
-                child: const Icon(Icons.person, color: Colors.amber, size: 28),
-              ),
-            ),
+              errorBuilder: (context, error, stackTrace) {
+                return _placeholder();
+              },
+            )
+                : _placeholder(),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -294,6 +324,19 @@ class CastTile extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _placeholder() {
+    return Container(
+      width: 54,
+      height: 54,
+      color: Colors.grey[800],
+      child: const Icon(
+        Icons.person,
+        color: Colors.amber,
+        size: 28,
       ),
     );
   }
